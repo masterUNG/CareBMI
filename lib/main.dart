@@ -1,5 +1,4 @@
 import 'package:carebmi/routers.dart';
-import 'package:carebmi/states/onboarding_screen.dart';
 import 'package:carebmi/utility/myconstant.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
