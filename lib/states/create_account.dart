@@ -7,7 +7,8 @@ class CreateAccount extends StatefulWidget {
 }
 
 class _CreateAccountState extends State<CreateAccount> {
-  String typeUser;
+  String typeUser, name, user, password, repassword;
+  final formKey = GlobalKey<FormState>();
 
   Container buildDisplayName(BuildContext context) {
     return Container(
@@ -15,6 +16,14 @@ class _CreateAccountState extends State<CreateAccount> {
       margin: EdgeInsets.only(top: 16),
       width: MediaQuery.of(context).size.width * 0.6,
       child: TextFormField(
+        onSaved: (newValue) => name = newValue.trim(),
+        validator: (value) {
+          if (value?.isEmpty ?? true) {
+            return 'Plese Fill Display Name';
+          } else {
+            return null;
+          }
+        },
         decoration:
             MyStyle().myInputDecoration(Icons.fingerprint, 'Display Name : '),
       ),
@@ -27,6 +36,15 @@ class _CreateAccountState extends State<CreateAccount> {
       margin: EdgeInsets.only(top: 16),
       width: MediaQuery.of(context).size.width * 0.6,
       child: TextFormField(
+        onSaved: (newValue) => user = newValue.trim(),
+        validator: (value) {
+          if (value?.isEmpty ?? true) {
+            return 'Please Fill User in Blank';
+          } else {
+            return null;
+          }
+        },
+        keyboardType: TextInputType.emailAddress,
         decoration: MyStyle().myInputDecoration(Icons.perm_identity, 'User'),
       ),
     );
@@ -38,6 +56,14 @@ class _CreateAccountState extends State<CreateAccount> {
       margin: EdgeInsets.only(top: 16),
       width: MediaQuery.of(context).size.width * 0.6,
       child: TextFormField(
+        onSaved: (newValue) => password = newValue.trim(),
+        validator: (value) {
+          if (value?.isEmpty ?? true) {
+            return 'Please Fill Password in Blank';
+          } else {
+            return null;
+          }
+        },
         obscureText: true,
         decoration:
             MyStyle().myInputDecoration(Icons.lock_outline, 'Password : '),
@@ -51,6 +77,14 @@ class _CreateAccountState extends State<CreateAccount> {
       margin: EdgeInsets.only(top: 16),
       width: MediaQuery.of(context).size.width * 0.6,
       child: TextFormField(
+        onSaved: (newValue) => repassword = newValue.trim(),
+        validator: (value) {
+          if (value?.isEmpty ?? true) {
+            return 'Please Fill RePassword in Blank';
+          } else {
+            return null;
+          }
+        },
         obscureText: true,
         decoration: MyStyle()
             .myInputDecoration(Icons.lock_outline_sharp, 'Re-Password :'),
@@ -67,49 +101,74 @@ class _CreateAccountState extends State<CreateAccount> {
       ),
       body: Center(
         child: SingleChildScrollView(
-          child: Column(
-            children: [
-              buildDisplayName(context),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    child: RadioListTile(
-                      value: 'user',
-                      groupValue: typeUser,
-                      onChanged: (value) {
-                        setState(() {
-                          typeUser = value;
-                        });
-                      },
-                      title: Text('User'),
-                      subtitle: Text('หมายถึง User ทั่วไป'),
-                    ),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    child: RadioListTile(
-                      value: 'trainner',
-                      groupValue: typeUser,
-                      onChanged: (value) {
-                        setState(() {
-                          typeUser = value;
-                        });
-                      },
-                      title: Text('Trainner'),
-                      subtitle: Text('Trainner ที่ดูแล User'),
-                    ),
-                  ),
-                ],
-              ),
-              buildUser(context),
-              buildPassword(context),
-              buildRePassword(context),
-            ],
+          child: Form(
+            key: formKey,
+            child: Column(
+              children: [
+                buildDisplayName(context),
+                buildTypeUser(context),
+                buildUser(context),
+                buildPassword(context),
+                buildRePassword(context),
+                buildCreateAccount(context)
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  Container buildCreateAccount(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(top: 16),
+      width: MediaQuery.of(context).size.width * 0.6,
+      child: ElevatedButton(
+        style: MyStyle().buttonStyle(),
+        onPressed: () {
+          if (formKey.currentState.validate()) {
+            formKey.currentState.save();
+          }
+          print('name ==>> $name');
+        },
+        child: Text('Create Account'),
+      ),
+    );
+  }
+
+  Column buildTypeUser(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          width: MediaQuery.of(context).size.width * 0.6,
+          child: RadioListTile(
+            value: 'user',
+            groupValue: typeUser,
+            onChanged: (value) {
+              setState(() {
+                typeUser = value;
+              });
+            },
+            title: Text('User'),
+            subtitle: Text('หมายถึง User ทั่วไป'),
+          ),
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width * 0.6,
+          child: RadioListTile(
+            value: 'trainner',
+            groupValue: typeUser,
+            onChanged: (value) {
+              setState(() {
+                typeUser = value;
+              });
+            },
+            title: Text('Trainner'),
+            subtitle: Text('Trainner ที่ดูแล User'),
+          ),
+        ),
+      ],
     );
   }
 }
