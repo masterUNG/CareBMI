@@ -9,6 +9,7 @@ class CreateAccount extends StatefulWidget {
 class _CreateAccountState extends State<CreateAccount> {
   String typeUser, name, user, password, repassword;
   final formKey = GlobalKey<FormState>();
+  bool statusRadio = true;
 
   Container buildDisplayName(BuildContext context) {
     return Container(
@@ -107,6 +108,7 @@ class _CreateAccountState extends State<CreateAccount> {
               children: [
                 buildDisplayName(context),
                 buildTypeUser(context),
+                statusRadio ? SizedBox() : buildValidateRadio(context),
                 buildUser(context),
                 buildPassword(context),
                 buildRePassword(context),
@@ -119,6 +121,25 @@ class _CreateAccountState extends State<CreateAccount> {
     );
   }
 
+  Container buildValidateRadio(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.6,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Divider(
+            color: Colors.red.shade700,
+            thickness: 1.0,
+          ),
+          Text(
+            'Please Choose Type User',
+            style: TextStyle(color: Colors.red, fontSize: 12),
+          ),
+        ],
+      ),
+    );
+  }
+
   Container buildCreateAccount(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: 16),
@@ -126,10 +147,20 @@ class _CreateAccountState extends State<CreateAccount> {
       child: ElevatedButton(
         style: MyStyle().buttonStyle(),
         onPressed: () {
-          if (formKey.currentState.validate()) {
+          if (formKey.currentState.validate() && typeUser != null) {
             formKey.currentState.save();
+            print('data Complease');
           }
-          print('name ==>> $name');
+
+          if (typeUser == null) {
+            setState(() {
+              statusRadio = false;
+            });
+          } else {
+            setState(() {
+              statusRadio = true;
+            });
+          }
         },
         child: Text('Create Account'),
       ),
