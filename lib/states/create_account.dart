@@ -9,7 +9,7 @@ class CreateAccount extends StatefulWidget {
 class _CreateAccountState extends State<CreateAccount> {
   String typeUser, name, user, password, repassword;
   final formKey = GlobalKey<FormState>();
-  bool statusRadio = true;
+  bool statusRadio = true, redEyePass = true, redEyeRePass = true;
 
   Container buildDisplayName(BuildContext context) {
     return Container(
@@ -57,7 +57,7 @@ class _CreateAccountState extends State<CreateAccount> {
       margin: EdgeInsets.only(top: 16),
       width: MediaQuery.of(context).size.width * 0.6,
       child: TextFormField(
-        onSaved: (newValue) => password = newValue.trim(),
+        onChanged: (newValue) => password = newValue.trim(),
         validator: (value) {
           if (value?.isEmpty ?? true) {
             return 'Please Fill Password in Blank';
@@ -65,9 +65,9 @@ class _CreateAccountState extends State<CreateAccount> {
             return null;
           }
         },
-        obscureText: true,
-        decoration:
-            MyStyle().myInputDecoration(Icons.lock_outline, 'Password : '),
+        obscureText: redEyePass,
+        decoration: MyStyle()
+            .myInputDecoration(Icons.lock_outline, 'Password : ', redEye: redEyePass),
       ),
     );
   }
@@ -78,17 +78,18 @@ class _CreateAccountState extends State<CreateAccount> {
       margin: EdgeInsets.only(top: 16),
       width: MediaQuery.of(context).size.width * 0.6,
       child: TextFormField(
-        onSaved: (newValue) => repassword = newValue.trim(),
         validator: (value) {
-          if (value?.isEmpty ?? true) {
+          if (value.isEmpty ?? true) {
             return 'Please Fill RePassword in Blank';
+          } else if (value != password) {
+            return 'Password And RePassword Not Math';
           } else {
             return null;
           }
         },
-        obscureText: true,
+        obscureText: redEyeRePass,
         decoration: MyStyle()
-            .myInputDecoration(Icons.lock_outline_sharp, 'Re-Password :'),
+            .myInputDecoration(Icons.lock_outline_sharp, 'Re-Password :', redEye: redEyeRePass),
       ),
     );
   }
